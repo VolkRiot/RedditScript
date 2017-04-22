@@ -1,0 +1,14 @@
+{
+  "name": "redditscript",
+  "version": "0.5.0",
+  "description": "Trying out reddit scripting",
+  "main": "redditTest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mishka",
+  "license": "ISC",
+  "dependencies": {
+    "snoowrap": "^1.13.0"
+  }
+}
