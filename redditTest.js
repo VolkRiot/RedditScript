@@ -8,7 +8,7 @@ class RVideos extends snoowrap{
     super(config);
   }
 
-  getHotYTLinks(sub = 'videos', cb){
+  getHotYTLinks(sub = 'videos', cb, ...args) {
     let links = [];
     this.getSubreddit(sub).getHot().then((entry) =>{
       entry.filter((item) => {
@@ -20,7 +20,17 @@ class RVideos extends snoowrap{
       }).forEach((yLink) => {
         links.push(yLink);
       });
-      cb(links);
+
+      links.map((elem) => {
+        this.postToSub('testingMishaBots', elem);
+      });
+    });
+  }
+
+  postToSub(sub = 'testingMishaBots', post){
+    this.getSubreddit(sub).submitLink({
+      title: post.title,
+      url: post.url
     });
   }
 
@@ -29,4 +39,4 @@ class RVideos extends snoowrap{
 // Change to environmental variables for remote deployment
 const reddit = new RVideos(redditConfig);
 
-reddit.getHotYTLinks('videos', console.log);
+reddit.getHotYTLinks('videos', reddit.postToSub, ['testingMishaBots']);
