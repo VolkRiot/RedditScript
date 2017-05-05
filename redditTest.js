@@ -4,11 +4,14 @@ const redditConfig = require('./config.js');
 
 
 class RVideos extends snoowrap{
-  constructor(config){
+  constructor(config, uSub){
     super(config);
+    this._uSub = uSub || 'testingMishaBots'
   }
 
-  getHotYTLinks(sub = 'videos', cb, ...args) {
+  set uSub(userSub){this._uSub = userSub;}
+
+  getHotYTLinks(sub = 'videos') {
     let links = [];
     this.getSubreddit(sub).getHot().then((entry) =>{
       entry.filter((item) => {
@@ -22,12 +25,12 @@ class RVideos extends snoowrap{
       });
 
       links.map((elem) => {
-        this.postToSub('testingMishaBots', elem);
+        this.postToSub(this._uSub, elem);
       });
     });
   }
 
-  postToSub(sub = 'testingMishaBots', post){
+  postToSub(sub, post){
     this.getSubreddit(sub).submitLink({
       title: post.title,
       url: post.url
@@ -39,4 +42,4 @@ class RVideos extends snoowrap{
 // Change to environmental variables for remote deployment
 const reddit = new RVideos(redditConfig);
 
-reddit.getHotYTLinks('videos', reddit.postToSub, ['testingMishaBots']);
+reddit.getHotYTLinks('videos');
