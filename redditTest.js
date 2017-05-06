@@ -1,11 +1,18 @@
 const snoowrap = require('snoowrap');
 
-const redditConfig = require('./config.js');
-
-
 class RVideos extends snoowrap{
   constructor(config, uSub){
-    super(config);
+    if(process.env.NODE_ENV){
+      super({
+        userAgent: "Test Reddit App",
+        clientId: process.env.REDDIT_CLIENT ,
+        clientSecret: process.env.REDDIT_SECRET,
+        username: process.env.REDDIT_USER,
+        password: process.env.REDDIT_PASS
+      });
+    }else{
+      super(require('./config.js'));
+    }
     this._uSub = uSub || 'testingMishaBots'
   }
 
@@ -13,6 +20,7 @@ class RVideos extends snoowrap{
 
   getHotYTLinks(sub = 'videos') {
     let links = [];
+
     this.getSubreddit(sub).getHot().then((entry) =>{
       entry.filter((item) => {
         try{
@@ -31,6 +39,7 @@ class RVideos extends snoowrap{
   }
 
   postToSub(sub, post){
+
     this.getSubreddit(sub).submitLink({
       title: post.title,
       url: post.url
@@ -41,5 +50,4 @@ class RVideos extends snoowrap{
 
 // Change to environmental variables for remote deployment
 const reddit = new RVideos(redditConfig);
-
 reddit.getHotYTLinks('videos');
